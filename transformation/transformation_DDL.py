@@ -1,0 +1,121 @@
+import pyodbc
+
+
+conn = pyodbc.connect(
+    "DRIVER={PostgreSQL Unicode};"
+    "SERVER=localhost;"
+    "PORT=5432;"
+    "DATABASE=postgres;"
+    "UID=postgres;"
+    "PWD=7002anuN;"
+)
+conn.autocommit = True
+cursor = conn.cursor()
+
+# Check if database exists
+cursor.execute("SELECT 1 FROM pg_database WHERE datname = 'dwh'")
+if not cursor.fetchone():
+    cursor.execute("CREATE DATABASE dwh")
+    print("Database 'dwh' created!")
+else:
+    print("Database 'dwh' already exists.")
+
+conn.commit()
+cursor.close()
+conn.close()
+
+#connect to dwh
+conn = pyodbc.connect(
+    "DRIVER={PostgreSQL Unicode};"
+    "SERVER=localhost;"
+    "PORT=5432;"
+    "DATABASE=dwh;"
+    "UID=postgres;"
+    "PWD=7002anuN;"
+)
+conn.autocommit = True
+cursor = conn.cursor()
+
+# Create schema if it doesn't exist
+cursor.execute("CREATE SCHEMA IF NOT EXISTS transformation")
+
+
+# Drop and create table
+cursor.execute("DROP TABLE IF EXISTS transformation.crm_cust_info")
+cursor.execute("""
+    CREATE TABLE transformation.crm_cust_info (
+        cst_id INTEGER,
+        cst_key VARCHAR(50),
+        cst_firstname VARCHAR(50),
+        cst_lastname VARCHAR(50),
+        cst_marital_status VARCHAR(50),
+        cst_gndr VARCHAR(50),
+        cst_create_date DATE
+    )
+""")
+
+# crm_prd_info
+cursor.execute("DROP TABLE IF EXISTS transformation.crm_prd_info")
+cursor.execute("""
+    CREATE TABLE transformation.crm_prd_info (
+        prd_id INTEGER,
+        prd_key VARCHAR(50),
+        prd_subcategory VARCHAR(50),
+        prd_nm VARCHAR(50),
+        prd_cost DECIMAL(10,2),
+        prd_line VARCHAR(50),
+        prd_start_dt DATE,
+        prd_end_dt DATE
+    )
+""")
+
+# crm_sales_details
+cursor.execute("DROP TABLE IF EXISTS transformation.crm_sales_details")
+cursor.execute("""
+    CREATE TABLE transformation.crm_sales_details (
+        sls_ord_num VARCHAR(50),
+        sls_prd_key VARCHAR(50),
+        sls_cust_id INTEGER,
+        sls_order_dt INTEGER,
+        sls_ship_dt INTEGER,
+        sls_due_dt INTEGER,
+        sls_sales DECIMAL(10,2),
+        sls_quantity INTEGER,
+        sls_price DECIMAL(10,2)
+    )
+""")
+
+# erp_CUST_AZ12
+cursor.execute("DROP TABLE IF EXISTS transformation.erp_cust_az12")
+cursor.execute("""
+    CREATE TABLE transformation.erp_cust_az12 (
+        cid VARCHAR(50),
+        bdate DATE,
+        gen VARCHAR(50)
+    )
+""")
+
+# erp_LOC_A101
+cursor.execute("DROP TABLE IF EXISTS transformation.erp_loc_a101")
+cursor.execute("""
+    CREATE TABLE transformation.erp_loc_a101 (
+        cid VARCHAR(50),
+        cntry VARCHAR(50)
+    )
+""")
+
+# erp_PX_CAT_G1V2
+cursor.execute("DROP TABLE IF EXISTS transformation.erp_px_cat_g1v2")
+cursor.execute("""
+    CREATE TABLE transformation.erp_px_cat_g1v2 (
+        id VARCHAR(50),
+        cat VARCHAR(50),
+        subcat VARCHAR(50),
+        maintenance VARCHAR(50)
+    )
+""")
+
+
+cursor.close()
+conn.close()
+
