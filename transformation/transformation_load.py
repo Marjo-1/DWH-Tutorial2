@@ -8,7 +8,7 @@ CONN_STR_POSTGRES = (
     "PORT=5432;"
     "DATABASE=postgres;"
     "UID=postgres;"
-    "PWD=7002anuN;"
+    "PWD=*****;"
 )
 
 CONN_STR_DWH = (
@@ -17,7 +17,7 @@ CONN_STR_DWH = (
     "PORT=5432;"
     "DATABASE=dwh;"
     "UID=postgres;"
-    "PWD=7002anuN;"
+    "PWD=*****;"
 )
 
 
