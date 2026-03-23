@@ -7,7 +7,7 @@ conn = pyodbc.connect(
     "PORT=5432;"
     "DATABASE=postgres;"
     "UID=postgres;"
-    "PWD=7002anuN;"
+    "PWD=*****;"
 )
 conn.autocommit = True
 cursor = conn.cursor()
@@ -31,7 +31,7 @@ conn = pyodbc.connect(
     "PORT=5432;"
     "DATABASE=dwh;"
     "UID=postgres;"
-    "PWD=7002anuN;"
+    "PWD=*****;"
 )
 conn.autocommit = True
 cursor = conn.cursor()
